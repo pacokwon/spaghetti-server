@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        body {
+            padding-top: 30px;
+        }
+
+        .error {
+            color: #D8000C;
+            font-size: 12px;
+        }
+
+        .ok {
+            color: rgb(114, 190, 71);
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Register</h1>
+        <div class="card card-body bg-light">
+            <form method="POST" action="/user/register" oninput='conf.setCustomValidity(conf.value != password.value ? "Passwords do not match." : "")'>
+                <label for="name">Name</label>
+                <div class="form-row form-group" id="name">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" required>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label for="password">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label for="confirm">Confirm password:</label>
+                        <input id="confirm" class="form-control" type="password" placeholder="Confirm Password" name="conf">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <!-- https://kds.kaist.ac.kr/information/apply_dormitory_intro.do -->
+                        <label for="dorm">Dormitory</label>
+                        <select id="dorm" name="dormitory" class="custom-select" required>
+                            <option value="">               Select Dormitory                       </option>
+                            <option value="sarang">         사랑관 Sarang Hall                      </option>
+                            <option value="somang">         소망관 Somang Hall                      </option>
+                            <option value="seongsil">       성실관 Seongsil Hall                    </option>
+                            <option value="jilli">          진리관 Jilli Hall                       </option>
+                            <option value="silloe">         신뢰관 Silloe Hall                      </option>
+                            <option value="jihey">          지혜관 Jihey Hall                       </option>
+                            <option value="areum">          아름관 Areum Hall                       </option>
+                            <option value="sejong">         세종관 Sejong Hall                      </option>
+                            <option value="galilei">        갈릴레이관 Galilei Hall                 </option>
+                            <option value="nanum">          나눔관 Nanum Hall                       </option>
+                            <option value="married">        기혼자기숙사 Married Students Housing    </option>
+                            <option value="startup">        스타트업빌리지 Startup Village           </option>
+                            <option value="international">  인터내셔널빌리지 International Village   </option>
+                            <option value="dasom">          다솜관 Dasom Hall                       </option>
+                            <option value="heemang">        희망관 Heemang Hall                     </option>
+                            <option value="mir">            미르관 Mir Hall                         </option>
+                            <option value="narae">          나래관 Narae Hall                       </option>
+                            <option value="nadl">           나들관 Nadl Hall                        </option>
+                            <option value="yeoul">          여울관 Yeoul Hall                       </option>
+                            <option value="etc">            기타 Others                             </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary form-control">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#username').keyup(() => {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: '/user/check',
+                    dataType: 'json',
+                    data: { username: $('#username').val(), type: 'register' },
+                    success: (res) => {
+                        if (res['exists']) {
+                            if ($('#username').prev().is("span")) {
+                                $('#username').prev().remove();
+                            }
+                            $('<span class="error"> &emsp; Username already taken. </span>').insertBefore('#username');
+                            $('#username')[0].setCustomValidity("Choose another username");
+                        } else {
+                            if ($('#username').prev().is("span")) {
+                                $('#username').prev().remove();
+                            }
+                            $('<span class="ok"> &emsp; OK</span>').insertBefore('#username');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

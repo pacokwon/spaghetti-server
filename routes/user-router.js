@@ -1,0 +1,87 @@
+const express = require('express');
+const router = express.Router();
+const User = require('../models/User');
+const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
+
+router.get('/check', (req, res) => {
+    const { username } = req.query;
+    User.find({ username }, (err, user) => {
+        if (err) console.log(err);
+
+        res.setHeader("Content-Type", "application/json");
+        if (user.length) {
+            // if such username exists, set exists to true
+            res.send(JSON.stringify({ exists: true }));
+        } else {
+            // if such username doesn't exist set exists to false
+            res.send(JSON.stringify({ exists: false }));
+        }
+    });
+})
+
+router.post('/register', (req, res) => {
+    console.log(req.body);
+    const { name, username, password, dormitory } = req.body;
+    const user = new User({
+        name,
+        username,
+        password,
+        dormitory
+    });
+
+    bcrypt.hash(req.body.password, 10, (error, hash) => {
+        if (error) {
+            console.log(error);
+        }
+        // update password to hashed one
+        user.password = hash;
+
+        // save to database
+        user.save((err) => {
+            if (err) {
+                console.log(err);
+                return res.json({
+                    success: false
+                });
+            }
+            
+            console.log('user registration successful');
+
+            res.json({
+                success: true
+            });
+        });
+    });
+})
+
+router.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    console.log('User submitted: ', username, password);
+
+    User.find({ username }, (err, user) => {
+        if (!user.length) {
+            return res.json({
+                success: false,
+                token: null
+            });
+        }
+        bcrypt.compare(password, user[0]['password'], (error, result) => {
+            if (result) {
+                console.log('Valid!');
+                let token = jwt.sign({ username }, 'keyboard cat', { expiresIn: 30 });
+                res.json({
+                    success: true,
+                    token
+                });
+            } else {
+                res.status(401).json({
+                    success: false,
+                    token: null
+                })
+            }
+        })
+    })
+})
+
+module.exports = router;
