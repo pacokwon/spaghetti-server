@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const user = require('./routes/user-router');
+const api = require('./routes/api-router');
 const cors = require('cors');
+const session = require('express-session');
 const exjwt = require('express-jwt');
 
 const app = express();
@@ -34,34 +36,10 @@ app.use(express.static('static/views'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// const jwt_middleware = exjwt({
-//     secret: 'keyboard cat'
-// })
-
 // routing
 app.use('/user', user);
+app.use('/api', api);
 
-// app.get('/', sessionChecker, (req, res) => {
-//     res.redirect('/login');
-// });
-app.get('/', (req, res) => {
-    res.send(JSON.stringify({matches: false}));
-});
-
-app.post('/', (req, res) => {
-    res.send(JSON.stringify({ matches: true }));
-})
-
-
-app.get('/register', (req, res) => {
-    res.sendFile(__dirname + '/static/views/register.html');
-});
-
-app.get('/login', (req, res) => {
-});
-
-app.get('/dashboard', (req, res) => {
-});
 
 app.listen(5000, () => {
     console.log('Listening on localhost:5000');

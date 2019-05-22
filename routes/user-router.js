@@ -4,13 +4,29 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
+router.get('/data', (req, res) => {
+    const { username } = req.query;
+    User.find({ username }, (err, users) => {
+        if (err) console.log(err);
+
+        const { name, dormitory } = users[0];
+
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({
+            username,
+            name,
+            dormitory
+        }));
+    })
+})
+
 router.get('/check', (req, res) => {
     const { username } = req.query;
-    User.find({ username }, (err, user) => {
+    User.find({ username }, (err, users) => {
         if (err) console.log(err);
 
         res.setHeader("Content-Type", "application/json");
-        if (user.length) {
+        if (users.length) {
             // if such username exists, set exists to true
             res.send(JSON.stringify({ exists: true }));
         } else {
@@ -45,7 +61,7 @@ router.post('/register', (req, res) => {
                     success: false
                 });
             }
-            
+
             console.log('user registration successful');
 
             res.json({
@@ -69,7 +85,7 @@ router.post('/login', (req, res) => {
         bcrypt.compare(password, user[0]['password'], (error, result) => {
             if (result) {
                 console.log('Valid!');
-                let token = jwt.sign({ username }, 'keyboard cat', { expiresIn: 30 });
+                let token = jwt.sign({ username }, 'keyboard cat', { expiresIn: 60 });
                 res.json({
                     success: true,
                     token
