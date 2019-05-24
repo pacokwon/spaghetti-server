@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const Distance = require('../models/Distance');
+const Distance = require('../models/distance');
+const Category = require('../models/category');
+const Building = require('../models/building');
 
 /**
  * db.distances.aggregate([ {$match: {start: '카이스트본원소망관'}}, { $lookup: { from: 'places', localField: 'destination', foreignField: 'name', as: 'place_info'}}, {$unwind: '$place_info'}, { $project: { _id: 1, start: 1, destination: 1, distance: 1, cafeteria_list: '$place_info.cafeteria_list'} }])
  */
-router.get('/nearby', (req, res) => {
+router.get('/nearbyRestaurants', (req, res) => {
     const { start } = req.query;
     const closest_N = Number(req.query.closest_N);
 
@@ -20,7 +22,7 @@ router.get('/nearby', (req, res) => {
         },
         {
             '$lookup': {
-                'from': "places",
+                'from': "buildings",
                 'localField': "destination",
                 'foreignField': "name",
                 'as': "place_info"
@@ -43,11 +45,40 @@ router.get('/nearby', (req, res) => {
         }
     ], (err, result) => {
         if (err) res.status(500).end('DB error');
-        
+
         res.status(200);
-        console.log(result);
         res.send(JSON.stringify(result));
     })
 })
+
+router.get('/allRestaurants', (req, res) => {
+    Building.aggregate([
+        {
+            '$unwind': '$cafeteria_list'
+        },
+        {
+            '$lookup': {
+                'from': 'cafeterias',
+                'localField': 'cafeteria_list',
+                'foreignField': 'name',
+                'as': 'caft_info'
+            }
+        },
+        {
+            '$project': {
+                '_id': 1,
+                'building_name': '$name',
+                'caft_name': '$cafeteria_list',
+                'description': '$caft_info.description'
+            }
+        }
+    ], (err, result) => {
+        if (err) res.status(500).end('DB error');
+
+        res.send(JSON.stringify(result));
+    })
+})
+
+
 
 module.exports = router

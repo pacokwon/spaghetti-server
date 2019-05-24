@@ -85,13 +85,13 @@ router.post('/login', (req, res) => {
         bcrypt.compare(password, user[0]['password'], (error, result) => {
             if (result) {
                 console.log('Valid!');
-                let token = jwt.sign({ username }, 'keyboard cat', { expiresIn: 60 });
+                let token = jwt.sign({ username }, 'keyboard cat', { expiresIn: 3600 });
                 res.json({
                     success: true,
                     token
                 });
             } else {
-                res.status(401).json({
+                res.json({
                     success: false,
                     token: null
                 })
