@@ -2,7 +2,8 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import json
 from pymongo import MongoClient
-from insert_camto import insert_camto
+from extra_restaurants import insert_camto
+from extra_restaurants import insert_sanghai
 
 client = MongoClient('mongodb://localhost')
 db = client['newb']
@@ -29,12 +30,13 @@ descriptions = {
     "대덕동네피자": "",
     "휴김밥": "",
     "서브웨이": "",
-    "상하이": "카이마루에 위치한 중국집 상하이입니다.",
+    "상하이": "카이마루에 위치한 중식 음식점 상하이입니다.",
     "태울관 뚝배기": "태울관에 위치한 태울관 뚝배기입니다.",
     "캠토": '카이마루에 위치한 토스트, 컵밥 판매 매점입니다'
 }
 
 insert_camto()
+insert_sanghai()
 
 with open('./base.json', 'r') as fp:
     jsonObj = json.load(fp)
@@ -85,7 +87,7 @@ with open('./base.json', 'r') as fp:
         menus = []
         for div in card_title:
             menus.append(div.text)
-        col.insert_one({'name': name, 'category': label_title, 'menus': menus})
+        col.insert_one({'name': '태울관 뚝배기', 'category': label_title, 'menus': menus})
 
     col = db['cafeterias']
     # col.insert_one({'name': '태울관 뚝배기', 'description': '태울관에 위치한 태울관 뚝배기입니다.'})

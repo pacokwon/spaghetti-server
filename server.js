@@ -37,9 +37,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // routing
-app.use('/user', user);
 app.use('/api', api);
-
 
 app.listen(5000, () => {
     console.log('Listening on localhost:5000');
