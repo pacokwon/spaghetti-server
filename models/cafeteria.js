@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const cafeteriaSchema = mongoose.Schema(
     {
         name: String,
-        description: String
+        description: String,
+        rating: [Number]
     },
     {
         collection: "cafeterias"

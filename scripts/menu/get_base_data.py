@@ -1,7 +1,6 @@
 """
 This python file updates json files
 """
-
 import json
 import re
 from bs4 import BeautifulSoup

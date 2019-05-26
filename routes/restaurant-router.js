@@ -18,9 +18,6 @@ router.get('/nearby', (req, res) => {
             }
         },
         {
-            '$sort': { 'distance': 1 }
-        },
-        {
             '$lookup': {
                 'from': "buildings",
                 'localField': "destination",
@@ -33,11 +30,49 @@ router.get('/nearby', (req, res) => {
         },
         {
             '$project': {
-                '_id': 1,
                 'start': 1,
                 'destination': 1,
                 'distance': 1,
                 'cafeteria_list': '$place_info.cafeteria_list'
+            }
+        },
+        {
+            '$unwind': '$cafeteria_list'
+        },
+        {
+            '$lookup': {
+                'from': 'cafeterias',
+                'localField': 'cafeteria_list',
+                'foreignField': 'name',
+                'as': 'ratings'
+            }
+        },
+        {
+            '$project': {
+                'start': 1,
+                'destination': 1,
+                'distance': 1,
+                'cafeteria': '$cafeteria_list',
+                'ratings': { '$arrayElemAt': ['$ratings.rating', 0] }
+            }
+        },
+        {
+            '$group': {
+                '_id': {
+                    'distance': '$distance',
+                    'destination': '$destination'
+                },
+                'cafeteria_list': {
+                    '$push': {
+                        'cafeteria': '$cafeteria',
+                        'ratings': '$ratings'
+                    }
+                }
+            }
+        },
+        {
+            '$sort': {
+                '_id.distance': 1
             }
         },
         {
@@ -98,11 +133,11 @@ router.get('/single', (req, res) => {
         },
         {
             '$project': {
-                '_id': 1,
                 'name': 1,
                 'description': 1,
+                'rating': 1,
                 'categories.category': 1,
-                'categories.menus': 1,
+                'categories.menus': 1
             }
         }
     ], (err, result) => {
