@@ -101,10 +101,10 @@ with open('./base.json', 'r') as fp:
         label_title = list(child_divs[0].children)[-1].get_text()
 
         card_title = lw.find_all('div', class_='card-title')
-        menus = []
+        menus = set()
         for div in card_title:
-            menus.append(div.text)
-        col.insert_one({'name': '태울관 뚝배기', 'category': label_title, 'menus': menus})
+            menus.add(div.text)
+        col.insert_one({'name': '태울관 뚝배기', 'category': label_title, 'menus': list(menus)})
 
     col = db['cafeterias']
 

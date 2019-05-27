@@ -13,7 +13,7 @@ const app = express();
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'mongodb connection error:'));
 db.once('open', () => console.log('connected to mongodb'));
-mongoose.connect('mongodb://localhost/newb', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/newb', { useNewUrlParser: true, useFindAndModify: false });
 
 app.use(cors());
 

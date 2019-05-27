@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Category = require('../models/category');
+const Cafeteria = require('../models/cafeteria');
+const Rating = require('../models/rating');
 
 router.get('/single', (req, res) => {
     const { name } = req.query;
@@ -38,7 +40,6 @@ router.get('/single', (req, res) => {
     ], (err, result) => {
         if (err) res.status(500).end('DB error');
 
-        console.log(result);
         const processed = result.reduce((acc, cur) => {
             const key = cur.menu
             delete cur.menu
@@ -50,6 +51,49 @@ router.get('/single', (req, res) => {
 
         res.send(processed)
     })
+})
+
+router.put('/restaurant', (req, res) => {
+    console.log(req.body);
+    const { name, rating } = req.body;
+
+    Cafeteria.findOneAndUpdate(
+        {
+            'name': name
+        },
+        {
+            '$push': {
+                'rating': rating
+            }
+        },
+        (err, result) => {
+            if (err) res.status(500).end('DB error');
+
+            res.sendStatus(200);
+        }
+    )
+})
+
+router.put('/menu', (req, res) => {
+    console.log(req.body);
+    const { name, menu, starPointsObj } = req.body;
+
+    Rating.findOneAndUpdate(
+        {
+            'name': name,
+            'menu': menu
+        },
+        {
+            '$push': {
+                'rating': starPointsObj
+            }
+        },
+        (err, result) => {
+            if (err) res.status(500).end('DB error');
+
+            res.sendStatus(200);
+        }
+    )
 })
 
 module.exports = router;
