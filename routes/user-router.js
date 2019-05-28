@@ -9,13 +9,14 @@ router.get('/data', (req, res) => {
     User.find({ username }, (err, users) => {
         if (err) console.log(err);
 
-        const { name, dormitory } = users[0];
+        const { name, dormitory, preference } = users[0];
 
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify({
             username,
             name,
-            dormitory
+            dormitory,
+            preference
         }));
     })
 })
@@ -38,12 +39,14 @@ router.get('/check', (req, res) => {
 
 router.post('/register', (req, res) => {
     console.log(req.body);
-    const { name, username, password, dormitory } = req.body;
+    const { name, username, password, dormitory, preference } = req.body;
+
     const user = new User({
         name,
         username,
         password,
-        dormitory
+        dormitory,
+        preference
     });
 
     bcrypt.hash(req.body.password, 10, (error, hash) => {
