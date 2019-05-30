@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 import pprint
-import random
+from random import randint
 
 def insert_ratings():
     client = MongoClient('mongodb://localhost')
@@ -23,14 +23,15 @@ def insert_ratings():
 
     col = db['ratings']
     for obj in res:
+        salty = True if randint(0, 1) == 0 else False
         for i in range(10):
             if i == 0:
                 col.insert_one({'name': obj['name'],
                                 'menu': obj['menu'],
                                 'rating': [{
-                                    'taste': random.randint(1, 5),
-                                    'portion': random.randint(1, 5),
-                                    'price': random.randint(1, 5)
+                                    'taste': randint(1, 3) if salty else randint(3, 5),
+                                    'portion': randint(1, 3) if salty else randint(3, 5),
+                                    'price': randint(1, 3) if salty else randint(3, 5)
                                 }]})
             else:
                 col.update_one(
@@ -41,9 +42,9 @@ def insert_ratings():
                     {
                         '$push': {
                             'rating': {
-                                'taste': random.randint(1, 5),
-                                'portion': random.randint(1, 5),
-                                'price': random.randint(1, 5)
+                                'taste': randint(1, 3) if salty else randint(3, 5),
+                                'portion': randint(1, 3) if salty else randint(3, 5),
+                                'price': randint(1, 3) if salty else randint(3, 5)
                             }
                         }
                     }

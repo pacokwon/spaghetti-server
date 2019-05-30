@@ -76,7 +76,6 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
-    console.log('User submitted: ', username, password);
 
     User.find({ username }, (err, user) => {
         if (!user.length) {
@@ -87,7 +86,6 @@ router.post('/login', (req, res) => {
         }
         bcrypt.compare(password, user[0]['password'], (error, result) => {
             if (result) {
-                console.log('Valid!');
                 let token = jwt.sign({ username }, 'keyboard cat', { expiresIn: 3600 });
                 res.json({
                     success: true,
