@@ -86,7 +86,7 @@ router.post('/login', (req, res) => {
         }
         bcrypt.compare(password, user[0]['password'], (error, result) => {
             if (result) {
-                let token = jwt.sign({ username }, 'keyboard cat', { expiresIn: 3600 });
+                const token = jwt.sign({ username }, 'keyboard cat', { expiresIn: 3600 });
                 res.json({
                     success: true,
                     token
@@ -99,6 +99,25 @@ router.post('/login', (req, res) => {
             }
         })
     })
+})
+
+router.put('/modify', (req, res) => {
+    const { username, preference, selectedDorm } = req.body;
+
+    User.findOneAndUpdate(
+        {
+            'username': username
+        },
+        {
+            'preference': preference,
+            'dormitory': selectedDorm
+        },
+        (err, result) => {
+            const message = err ? 'DB error' : "Changes Successfully Made";
+
+            res.send({ message });
+        }
+    )
 })
 
 module.exports = router;

@@ -54,7 +54,6 @@ router.get('/single', (req, res) => {
 })
 
 router.put('/restaurant', (req, res) => {
-    console.log(req.body);
     const { name, rating } = req.body;
 
     Cafeteria.findOneAndUpdate(
@@ -75,7 +74,6 @@ router.put('/restaurant', (req, res) => {
 })
 
 router.put('/menu', (req, res) => {
-    console.log(req.body);
     const { name, menu, starPointsObj } = req.body;
 
     Rating.findOneAndUpdate(
