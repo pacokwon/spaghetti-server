@@ -12,8 +12,6 @@ const checkToken = (req, res, next) => {
             res.sendStatus(403);
         }
 
-        console.log('authenticated');
-
         req.token = token;
         next();
     } else {
