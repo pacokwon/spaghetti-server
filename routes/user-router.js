@@ -1,10 +1,13 @@
 const express = require('express');
-const router = express.Router();
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const checkToken = require("./authentication");
 
-router.get('/data', (req, res) => {
+const router = express.Router();
+
+// get user data
+router.get('/data', checkToken, (req, res) => {
     const { username } = req.query;
     User.find({ username }, (err, users) => {
         if (err) console.log(err);
@@ -21,6 +24,7 @@ router.get('/data', (req, res) => {
     })
 })
 
+// checks if user exists
 router.get('/check', (req, res) => {
     const { username } = req.query;
     User.find({ username }, (err, users) => {
@@ -37,8 +41,9 @@ router.get('/check', (req, res) => {
     });
 })
 
+
+// registers user data
 router.post('/register', (req, res) => {
-    console.log(req.body);
     const { name, username, password, dormitory, preference } = req.body;
 
     const user = new User({
@@ -74,6 +79,7 @@ router.post('/register', (req, res) => {
     });
 })
 
+// find user from login information
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
 
@@ -101,7 +107,8 @@ router.post('/login', (req, res) => {
     })
 })
 
-router.put('/modify', (req, res) => {
+// modify user dormitory or preference
+router.put('/modify', checkToken, (req, res) => {
     const { username, preference, selectedDorm } = req.body;
 
     User.findOneAndUpdate(

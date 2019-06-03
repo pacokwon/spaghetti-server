@@ -50,5 +50,33 @@ def insert_ratings():
                     }
                 )
 
+def insert_one_rating(name, menu, rating):
+    client = MongoClient('mongodb://localhost')
+    db = client['newb']
+
+    pipeline = [
+        {'$unwind': '$menus'},
+        {
+            '$project': {
+                '_id': 1,
+                'name': 1,
+                'menu': '$menus'
+            }
+        }
+    ]
+    col = db['ratings']
+
+    col.update_one(
+        {
+            'name': name,
+            'menu': menu
+        },
+        {
+            '$push': {
+                'rating': rating
+            }
+        }
+    )
+
 if __name__ == "__main__":
     insert_ratings()

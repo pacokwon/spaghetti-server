@@ -1,3 +1,9 @@
+"""
+this program defines functions for inserting menus
+that are not on bablabs. the menus are stored in
+./extra_menus.json file.
+"""
+
 import json
 from pymongo import MongoClient
 

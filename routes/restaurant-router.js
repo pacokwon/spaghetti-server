@@ -4,9 +4,7 @@ const Building = require('../models/building');
 const Distance = require('../models/distance');
 const Cafeteria = require('../models/cafeteria');
 
-/**
- * db.distances.aggregate([ {$match: {start: '카이스트본원소망관'}}, { $lookup: { from: 'places', localField: 'destination', foreignField: 'name', as: 'place_info'}}, {$unwind: '$place_info'}, { $project: { _id: 1, start: 1, destination: 1, distance: 1, cafeteria_list: '$place_info.cafeteria_list'} }])
- */
+// get nearby restaurant from a certain dormitory
 router.get('/nearby', (req, res) => {
     const { start } = req.query;
     const closest_N = Number(req.query.closest_N);
@@ -86,6 +84,7 @@ router.get('/nearby', (req, res) => {
     })
 })
 
+// get all restaurant information
 router.get('/all', (req, res) => {
     Building.aggregate([
         {
@@ -114,6 +113,7 @@ router.get('/all', (req, res) => {
     })
 })
 
+// get single restaurant information
 router.get('/single', (req, res) => {
     const { name } = req.query;
 

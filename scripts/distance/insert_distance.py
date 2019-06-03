@@ -1,3 +1,9 @@
+"""
+this python files inserts:
+1) distances between buildings
+2) list of cafeterias in each building
+"""
+
 from pymongo import MongoClient
 import json
 

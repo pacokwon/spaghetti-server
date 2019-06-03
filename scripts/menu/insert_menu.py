@@ -84,9 +84,11 @@ with open('./base.json', 'r') as fp:
 
             col.insert_one({'name': name, 'category': label_title, 'menus': menus})
 
+        # get description for cafeteria
         col = db['cafeterias']
         info_titles = soup.find_all('div', class_='info-title')
 
+        # if description exists, add it to the dictionary
         if info_titles[0].text == '소개':
             descriptions[name] = info_titles[0].next_sibling.text
 

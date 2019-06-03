@@ -1,5 +1,6 @@
 """
-This python file updates json files
+This python file updates base json files
+this file is needed to get url of each cafeteria
 """
 import json
 import re

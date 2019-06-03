@@ -3,8 +3,10 @@ const router = express.Router();
 const Category = require('../models/category');
 const Cafeteria = require('../models/cafeteria');
 const Rating = require('../models/rating');
+const checkToken = require('./authentication');
 
-router.get('/single', (req, res) => {
+// get rating of single restaurant's whole menu
+router.get('/wholemenu', (req, res) => {
     const { name } = req.query;
     Category.aggregate([
         {
@@ -53,7 +55,8 @@ router.get('/single', (req, res) => {
     })
 })
 
-router.put('/restaurant', (req, res) => {
+// add star rating to menu
+router.put('/restaurant', checkToken, (req, res) => {
     const { name, rating } = req.body;
 
     Cafeteria.findOneAndUpdate(
@@ -73,7 +76,8 @@ router.put('/restaurant', (req, res) => {
     )
 })
 
-router.put('/menu', (req, res) => {
+// add star rating to menu
+router.put('/menu', checkToken, (req, res) => {
     const { name, menu, starPointsObj } = req.body;
 
     Rating.findOneAndUpdate(
@@ -94,7 +98,8 @@ router.put('/menu', (req, res) => {
     )
 })
 
-router.get('/recommended', (req, res) => {
+// get recommended restaruant for specific user
+router.get('/recommended', checkToken, (req, res) => {
     let preference = req.query;
 
     const sum = Object.keys(preference).reduce((acc, cur) => acc + Number(preference[cur]), 0);
