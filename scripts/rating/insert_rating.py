@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-import pprint
 from random import randint
 
 def insert_ratings():
@@ -19,7 +18,6 @@ def insert_ratings():
     ]
 
     res = list(db.categories.aggregate(pipeline))
-    pprint.pprint(res)
 
     col = db['ratings']
     for obj in res:

@@ -12,7 +12,7 @@ db = client['newb']
 col = db['distances']
 db.distances.drop()
 
-with open('dist_data.json', 'r') as fp:
+with open('dist_data.json', 'r', encoding='utf-8') as fp:
     jsonObj = json.load(fp)
 
     for start in jsonObj:
@@ -22,7 +22,7 @@ with open('dist_data.json', 'r') as fp:
 col = db['buildings']
 db.buildings.drop()
 
-with open('locations.json', 'r') as fp:
+with open('locations.json', 'r', encoding='utf-8') as fp:
     jsonObj = json.load(fp)
 
     dests = jsonObj['destination']

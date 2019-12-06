@@ -12,7 +12,7 @@ def insert_camto():
     db = client['newb']
     col = db['categories']
 
-    with open('./extra_menus.json', 'r') as fp:
+    with open('./extra_menus.json', 'r', encoding='utf-8') as fp:
         jsonObj = json.load(fp)
         categories = jsonObj['camto']
 
@@ -24,7 +24,7 @@ def insert_sanghai():
     db = client['newb']
     col = db['categories']
 
-    with open('./extra_menus.json', 'r') as fp:
+    with open('./extra_menus.json', 'r', encoding='utf-8') as fp:
         jsonObj = json.load(fp)
         categories = jsonObj['sanghai']
 

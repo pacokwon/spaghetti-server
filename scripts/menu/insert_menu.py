@@ -48,7 +48,7 @@ insert_camto()
 insert_sanghai()
 
 # base.json is made from get_base_data.py
-with open('./base.json', 'r') as fp:
+with open('./base.json', 'r', encoding='utf-8') as fp:
     jsonObj = json.load(fp)
 
     # this array has dictionaries that contain informations about each store
